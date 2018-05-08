@@ -1,0 +1,14 @@
+{snippet content}
+    {if $editor && $acl}
+        <a n:href="SwitchEditor! false" class="ajax">Zpět na obsah</a>
+        {form form}
+            {label content /}
+            {input content, class=>"form-control"}
+
+            {input send, class=>"btn btn-primary"}
+        {/form}
+    {else}
+        <a n:href="SwitchEditor! true" n:if="$acl" class="ajax">Editovat obsah</a>
+        {$data|noescape}
+    {/if}
+{/snippet}

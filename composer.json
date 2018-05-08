@@ -1,0 +1,27 @@
+{
+  "name": "geniv/nette-front-editor",
+  "description": "Front editor extension for Nette Framework",
+  "keywords": [
+    "nette",
+    "front",
+    "editor",
+    "geniv"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Radek Fryšták",
+      "email": "geniv.radek@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.0",
+    "nette/nette": ">=2.4.0",
+    "geniv/nette-general-form": ">=1.0.0"
+  },
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  }
+}
