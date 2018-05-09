@@ -149,9 +149,7 @@ class FrontEditor extends Control implements ITemplatePath
         // load data to form
         $form->setDefaults(['content' => $this->data]);
 
-        $form->onSuccess[] = function (Form $form, array $values) {
-            $this->onSuccess($form, $values);
-        };
+        $form->onSuccess = $this->onSuccess;
         return $form;
     }
 }
