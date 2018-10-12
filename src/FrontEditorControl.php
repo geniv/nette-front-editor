@@ -19,8 +19,6 @@ trait FrontEditorControl
     private $_identityModel;
     /** @var SessionSection */
     private $_section;
-    /** @var string */
-    private $_sessionExpire;
 
 
     /**
@@ -33,8 +31,6 @@ trait FrontEditorControl
     {
         $this->_identityModel = $identityModel;
         $this->_section = $session->getSection('frontEditorEnable');
-
-        $this->_sessionExpire = '+1 hour';
     }
 
 
@@ -85,11 +81,12 @@ trait FrontEditorControl
     /**
      * Get front editor enable link.
      *
+     * @param string $sessionExpire
      * @return string
      */
-    public function getFrontEditorEnableLink(): string
+    public function getFrontEditorEnableLink(string $sessionExpire = '+1 hour'): string
     {
-        $hash = $this->_identityModel->getEncodeHash($this->user->getId(), $this->user->getIdentity()->login, $this->_sessionExpire);
+        $hash = $this->_identityModel->getEncodeHash($this->user->getId(), $this->user->getIdentity()->login, $sessionExpire);
         return '?hash=' . $hash . '&do=FrontEditorEnable';
     }
 }
