@@ -16,9 +16,11 @@ use Nette\Http\SessionSection;
 trait FrontEditorControl
 {
     /** @var IIdentityModel */
-    private $identityModel;
+    private $_identityModel;
     /** @var SessionSection */
-    private $section;
+    private $_section;
+    /** @var string */
+    private $_sessionExpire;
 
 
     /**
@@ -29,8 +31,10 @@ trait FrontEditorControl
      */
     public function __construct(IIdentityModel $identityModel, Session $session)
     {
-        $this->identityModel = $identityModel;
-        $this->section = $session->getSection('frontEditorEnable');
+        $this->_identityModel = $identityModel;
+        $this->_section = $session->getSection('frontEditorEnable');
+
+        $this->_sessionExpire = '+1 hour';
     }
 
 
@@ -42,17 +46,18 @@ trait FrontEditorControl
      */
     public function handleFrontEditorEnable(string $hash)
     {
-        $decode = $this->identityModel->getDecodeHash($hash);
+        $decode = $this->_identityModel->getDecodeHash($hash);
 
         $id = (int) $decode['id'];
-        $item = $this->identityModel->getById($id);  // load row from db
+        $item = $this->_identityModel->getById($id);  // load row from db
         if ($item && $id == $item['id']) { // not null result
-            if ($this->identityModel->verifyHash($item['id'] . $item['login'], $decode['verifyHash'])) {  // check hash and password
-                $this->section->setExpiration($decode['expired']);
-                $this->section->expired = $decode['expired'];
-                $this->section->enable = true;
+            if ($this->_identityModel->verifyHash($item['id'] . $item['login'], $decode['verifyHash'])) {  // check hash and password
+                $this->_section->setExpiration($decode['expired']);
+                $this->_section->expired = $decode['expired'];
+                $this->_section->enable = true;
             }
         }
+        $this->redirect('this');
     }
 
 
@@ -61,7 +66,8 @@ trait FrontEditorControl
      */
     public function handleFrontEditorDisable()
     {
-        $this->section->remove();
+        $this->_section->remove();
+        $this->redirect('this');
     }
 
 
@@ -72,6 +78,17 @@ trait FrontEditorControl
      */
     public function isFrontEditorEnable(): bool
     {
-        return $this->section->enable ?? false;
+        return $this->_section->enable ?? false;
+    }
+
+
+    /**
+     * Get front editor enable hash.
+     *
+     * @return string
+     */
+    public function getFrontEditorEnableHash(): string
+    {
+        return $this->_identityModel->getEncodeHash($this->user->getId(), $this->user->getIdentity()->login, $this->_sessionExpire);
     }
 }

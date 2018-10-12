@@ -41,6 +41,10 @@ presenters:
 ```php
 use FrontEditorControl;
 
+//$this->template->frontEditorEnable = $this->isFrontEditorEnable();
+//$frontEditor->setAcl($this->isFrontEditorEnable());
+//$frontEditor->getFrontEditorEnableHash();
+
 protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEditor
 {
     $frontEditor->setTemplatePath(__DIR__ . '/templates/frontEditor.latte');
