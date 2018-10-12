@@ -83,12 +83,13 @@ trait FrontEditorControl
 
 
     /**
-     * Get front editor enable hash.
+     * Get front editor enable link.
      *
      * @return string
      */
-    public function getFrontEditorEnableHash(): string
+    public function getFrontEditorEnableLink(): string
     {
-        return $this->_identityModel->getEncodeHash($this->user->getId(), $this->user->getIdentity()->login, $this->_sessionExpire);
+        $hash = $this->_identityModel->getEncodeHash($this->user->getId(), $this->user->getIdentity()->login, $this->_sessionExpire);
+        return '?hash=' . $hash . '&do=FrontEditorEnable';
     }
 }
