@@ -45,6 +45,9 @@ use FrontEditorControl;
 //$frontEditor->setAcl($this->isFrontEditorEnable());
 //$frontEditor->getFrontEditorEnableHash();
 
+//<a n:href="FrontEditorDisable!" n:if="$frontEditorEnable" class="ajax">odhlasi se z edit modu</a>
+//{control frontEditor.'-identText1'}
+
 protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEditor
 {
     $frontEditor->setTemplatePath(__DIR__ . '/templates/frontEditor.latte');
@@ -67,4 +70,67 @@ protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEd
 usage:
 ```latte
 {control frontEditor}
+```
+
+front editor v.2:
+----------------
+
+presenters front:
+```php
+use FrontEditorControl;
+
+protected function startup()
+{
+    parent::startup();
+
+    $this->template->frontEditorEnable = $this->isFrontEditorEnable();
+}
+
+protected function createComponentFrontEditor(FrontEditor $frontEditor): Multiplier
+{
+    $frontEditor->setTemplatePath(__DIR__ . '/templates/frontEditor.latte');
+    $frontEditor->setAcl($this->isFrontEditorEnable());
+
+    return new Multiplier(function ($indexName) use ($frontEditor) {
+        $data = $this['config']->getDataByIdent($indexName);
+        if (!$data) {
+            $this['config']->setEditor($indexName, $indexName); // create if not exists
+            return $frontEditor;
+        }
+        // set type and add variable to frontEditor
+        $frontEditor->getFormContainer()->setType($data['type']);
+        $frontEditor->addVariableTemplate('type', $data['type']);
+
+        $frontEditor->setData($data['content']);
+        $frontEditor->onSuccess[] = function (Form $form, array $values) use ($data) {
+            try {
+                if ($this['config']->editData($data['id'], ['content' => $values['content']])) {
+                    $this->flashMessage('done', 'success');
+                }
+            } catch (\Dibi\Exception $e) {
+                $this->flashMessage($e->getMessage(), 'danger');
+            }
+            $this->redirect('this');
+        };
+        return clone $frontEditor;
+    });
+}
+```
+
+usage front:
+```latte
+<a n:href="FrontEditorDisable!" n:if="$frontEditorEnable" class="ajax">logout edit mode</a>
+{control frontEditor.'-identText1'}
+```
+
+presenters admin:
+```php
+use FrontEditorControl;
+
+$this->template->frontEditorEnableLink = $this->getFrontEditorEnableLink();
+```
+
+usage admin:
+```latte
+<a href="{$baseUrl}/../{$frontEditorEnableLink}" title="{_'layout-front-editor-enable'}">link</a>
 ```
