@@ -47,7 +47,7 @@ trait FrontEditorControl
         $id = (int) $decode['id'];
         $item = $this->_identityModel->getById($id);  // load row from db
         if ($item && $id == $item['id']) { // not null result
-            if ($this->_identityModel->verifyHash($item['id'] . $item['login'], $decode['verifyHash'])) {  // check hash and password
+            if ($this->_identityModel->verifyHash($item['id'] . $item['login'], $decode['verifyHash'])) {  // check hash
                 $this->_section->setExpiration($decode['expired']);
                 $this->_section->expired = $decode['expired'];
                 $this->_section->enable = true;
