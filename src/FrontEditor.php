@@ -53,6 +53,17 @@ class FrontEditor extends Control implements ITemplatePath
 
 
     /**
+     * Get form container.
+     *
+     * @return IFormContainer
+     */
+    public function getFormContainer(): IFormContainer
+    {
+        return $this->formContainer;
+    }
+
+
+    /**
      * Set template path.
      *
      * @param string $path
