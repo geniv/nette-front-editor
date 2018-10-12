@@ -16,7 +16,8 @@ require:
 ```json
 "php": ">=7.0.0",
 "nette/nette": ">=2.4.0",
-"geniv/nette-general-form": ">=1.0.0"
+"geniv/nette-general-form": ">=1.0.0",
+"geniv/nette-identity": ">=1.0.0"
 ```
 
 Include in application
@@ -38,6 +39,8 @@ extensions:
 
 presenters:
 ```php
+use FrontEditorControl;
+
 protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEditor
 {
     $frontEditor->setTemplatePath(__DIR__ . '/templates/frontEditor.latte');
