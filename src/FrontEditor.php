@@ -80,6 +80,17 @@ class FrontEditor extends Control implements ITemplatePath
 
 
     /**
+     * Set template path link.
+     *
+     * @param string $path
+     */
+    public function setTemplatePathLink(string $path)
+    {
+        $this->templatePathLink = $path;
+    }
+
+
+    /**
      * Add variable template.
      *
      * @param string $name
