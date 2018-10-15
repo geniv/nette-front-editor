@@ -18,7 +18,7 @@ class FormContainer implements IFormContainer
     use SmartObject;
 
     /** @var string */
-    private $type;
+    private $type = 'textarea';
 
 
     /**
