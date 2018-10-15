@@ -6,7 +6,9 @@ use GeneralForm\IFormContainer;
 use GeneralForm\ITemplatePath;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\ITemplate;
 use Nette\Localization\ITranslator;
+use Nette\Utils\Callback;
 
 
 /**
@@ -22,17 +24,19 @@ class FrontEditor extends Control implements ITemplatePath
     /** @var ITranslator */
     private $translator;
     /** @var string */
-    private $templatePath;
+    private $templatePath, $templatePathLink;
     /** @var bool */
     private $acl = false;
     /** @var bool */
     private $editor = false;
-    /** @var string */
+    /** @var array */
     private $data;
     /** @var callable */
-    public $onSuccess;
+    public $onSuccess, $onLoadData;
     /** @var array */
     private $variableTemplate = [];
+    /** @var string */
+    private $identification = null;
 
 
     /**
@@ -48,7 +52,8 @@ class FrontEditor extends Control implements ITemplatePath
         $this->formContainer = $formContainer;
         $this->translator = $translator;
 
-        $this->templatePath = __DIR__ . '/FrontEditor.latte'; // set path
+        $this->templatePath = __DIR__ . '/FrontEditor.latte';   // set path
+        $this->templatePathLink = __DIR__ . '/FrontEditorLink.latte';   // set path
     }
 
 
@@ -87,12 +92,13 @@ class FrontEditor extends Control implements ITemplatePath
 
 
     /**
-     * Render.
+     * Set template.
+     *
+     * @internal
+     * @param ITemplate $template
      */
-    public function render()
+    private function setTemplate(ITemplate $template)
     {
-        $template = $this->getTemplate();
-
         // add user defined variable
         foreach ($this->variableTemplate as $name => $value) {
             $template->$name = $value;
@@ -101,6 +107,39 @@ class FrontEditor extends Control implements ITemplatePath
         $template->acl = $this->acl;
         $template->editor = $this->editor;
         $template->data = $this->data;
+        $template->identification = $this->identification;;
+    }
+
+
+    /**
+     * Render link.
+     *
+     * @param string $identification
+     */
+    public function renderLink(string $identification)
+    {
+        $this->identification = $identification;
+
+        $template = $this->getTemplate();
+        $this->setTemplate($template);
+
+        $template->setTranslator($this->translator);
+        $template->setFile($this->templatePathLink);
+        $template->render();
+    }
+
+
+    /**
+     * Render.
+     */
+    public function render()
+    {
+        if ($this->onLoadData) {
+            $this->data = Callback::invokeSafe($this->onLoadData, [$this->identification], null);
+        }
+
+        $template = $this->getTemplate();
+        $this->setTemplate($template);
 
         $template->setTranslator($this->translator);
         $template->setFile($this->templatePath);
@@ -122,9 +161,9 @@ class FrontEditor extends Control implements ITemplatePath
     /**
      * Set data.
      *
-     * @param string $data
+     * @param array $data
      */
-    public function setData(string $data)
+    public function setData(array $data)
     {
         $this->data = $data;
     }
@@ -133,11 +172,13 @@ class FrontEditor extends Control implements ITemplatePath
     /**
      * Handle switch editor.
      *
-     * @param bool $state
+     * @param bool        $state
+     * @param string|null $identification
      */
-    public function handleSwitchEditor(bool $state)
+    public function handleSwitchEditor(bool $state, string $identification = null)
     {
         $this->editor = $state;
+        $this->identification = $identification;
 
         if ($this->presenter->isAjax()) {
             $this->redrawControl('content');
@@ -155,10 +196,12 @@ class FrontEditor extends Control implements ITemplatePath
     {
         $form = new Form($this, $name);
         $form->setTranslator($this->translator);
+        $form->addHidden('id');
+
         $this->formContainer->getForm($form);
 
-        // load data to form
-        $form->setDefaults(['content' => $this->data]);
+        // set data to form
+        $form->setDefaults($this->data);
 
         $form->onSuccess = $this->onSuccess;
         return $form;
