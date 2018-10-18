@@ -205,6 +205,10 @@ class FrontEditor extends Control implements ITemplatePath
      */
     protected function createComponentForm(string $name): Form
     {
+//        if ($this->onLoadData) {
+//            $this->data = Callback::invokeSafe($this->onLoadData, [$this->identification], null);
+//        }
+
         $form = new Form($this, $name);
         $form->setTranslator($this->translator);
         $form->addHidden('id');
