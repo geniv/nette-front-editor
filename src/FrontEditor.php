@@ -119,7 +119,7 @@ class FrontEditor extends Control implements ITemplatePath
         $template->acl = $this->acl;
         $template->editor = $this->editor;
         $template->data = $data;
-        $template->identification = $this->identification;;
+        $template->identification = $this->identification;
     }
 
 
@@ -131,7 +131,7 @@ class FrontEditor extends Control implements ITemplatePath
      */
     private function getData(): array
     {
-        $result = [];
+        $result = $this->data;
         if ($this->onLoadData) {
             $result = Callback::invokeSafe($this->onLoadData, [$this->identification], null);
         }
