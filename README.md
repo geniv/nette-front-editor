@@ -37,6 +37,9 @@ extensions:
     frontEditor: FrontEditor\Bridges\Nette\Extension
 ```
 
+front editor v.1:
+-----------------
+
 presenters:
 ```php
 use FrontEditorControl;
@@ -73,7 +76,7 @@ usage:
 ```
 
 front editor v.2:
-----------------
+-----------------
 
 presenters front:
 ```php
@@ -120,8 +123,64 @@ protected function createComponentFrontEditor(FrontEditor $frontEditor): Multipl
 usage front:
 ```latte
 <a n:href="FrontEditorDisable!" n:if="$frontEditorEnable" class="ajax">logout edit mode</a>
+
 {control frontEditor.'-identText1'}
 ```
+
+front editor v.3:
+-----------------
+
+presenters front:
+```php
+use FrontEditorControl;
+
+protected function startup()
+{
+    parent::startup();
+
+    $this->template->frontEditorEnable = $this->isFrontEditorEnable();
+}
+
+protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEditor
+{
+    $frontEditor->setTemplatePath(__DIR__ . '/templates/frontEditor.latte');
+    $frontEditor->setAcl($this->isFrontEditorEnable());
+
+    $frontEditor->onLoadData = function ($identification) use ($frontEditor) {
+        if ($identification) {
+            $data = $this['config']->getDataByIdent($identification);
+            $frontEditor->getFormContainer()->setType($data['type']);
+            $frontEditor->addVariableTemplate('type', $data['type']);
+            return $data;
+        }
+        return null;
+    };
+
+    $frontEditor->onSuccess[] = function (Form $form, array $values) {
+        try {
+            if ($this['config']->editData($values['id'], ['content' => $values['content']])) {
+                $this->flashMessage('done', 'success');
+            }
+        } catch (\Dibi\Exception $e) {
+            $this->flashMessage($e->getMessage(), 'danger');
+        }
+        $this->redirect('this');
+    };
+    return $frontEditor;
+}
+```
+
+usage front:
+```latte
+<a n:href="FrontEditorDisable!" n:if="$frontEditorEnable" class="ajax">logout edit mode</a>
+
+{control frontEditor:link 'identText1'} {control config:editor 'identText1'}
+
+{control frontEditor}
+```
+
+front editor admin:
+-------------------
 
 presenters admin:
 ```php
