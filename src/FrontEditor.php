@@ -117,7 +117,7 @@ class FrontEditor extends Control implements ITemplatePath
 
         $template->acl = $this->acl;
         $template->editor = $this->editor;
-        $template->data = $this->getData();
+        $template->data = $this->getData(); // load data
         $template->identification = $this->identification;;
     }
 
@@ -221,10 +221,11 @@ class FrontEditor extends Control implements ITemplatePath
         $form->setTranslator($this->translator);
         $form->addHidden('id');
 
+        $data = $this->getData();   // load data
         $this->formContainer->getForm($form);
 
         // set data to form
-        $form->setDefaults($this->getData());
+        $form->setDefaults($data);
 
         $form->onSuccess = $this->onSuccess;
         return $form;
