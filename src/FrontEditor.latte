@@ -1,7 +1,7 @@
 {snippet content}
     {if $editor && $acl}
         <a n:href="SwitchEditor! false" class="ajax">{_'front-editor-back'}</a>
-        {form form}
+        {form form, class=>"ajax"}
             {label content /}
             {input content, class=>"form-control"}
 
