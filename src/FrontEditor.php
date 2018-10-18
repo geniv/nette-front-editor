@@ -35,8 +35,8 @@ class FrontEditor extends Control implements ITemplatePath
     public $onSuccess, $onLoadData;
     /** @var array */
     private $variableTemplate = [];
-    /** @var string */
-    private $identification = null;
+    /** @var string @persistent */
+    public $identification = null;
 
 
     /**
@@ -117,8 +117,24 @@ class FrontEditor extends Control implements ITemplatePath
 
         $template->acl = $this->acl;
         $template->editor = $this->editor;
-        $template->data = $this->data;
+        $template->data = $this->getData();
         $template->identification = $this->identification;;
+    }
+
+
+    /**
+     * Get data.
+     *
+     * @internal
+     * @return array
+     */
+    private function getData(): array
+    {
+        $result = [];
+        if ($this->onLoadData) {
+            $result = Callback::invokeSafe($this->onLoadData, [$this->identification], null);
+        }
+        return $result;
     }
 
 
@@ -145,10 +161,6 @@ class FrontEditor extends Control implements ITemplatePath
      */
     public function render()
     {
-        if ($this->onLoadData) {
-            $this->data = Callback::invokeSafe($this->onLoadData, [$this->identification], null);
-        }
-
         $template = $this->getTemplate();
         $this->setTemplate($template);
 
@@ -205,10 +217,6 @@ class FrontEditor extends Control implements ITemplatePath
      */
     protected function createComponentForm(string $name): Form
     {
-//        if ($this->onLoadData) {
-//            $this->data = Callback::invokeSafe($this->onLoadData, [$this->identification], null);
-//        }
-
         $form = new Form($this, $name);
         $form->setTranslator($this->translator);
         $form->addHidden('id');
@@ -216,7 +224,7 @@ class FrontEditor extends Control implements ITemplatePath
         $this->formContainer->getForm($form);
 
         // set data to form
-        $form->setDefaults($this->data);
+        $form->setDefaults($this->getData());
 
         $form->onSuccess = $this->onSuccess;
         return $form;
