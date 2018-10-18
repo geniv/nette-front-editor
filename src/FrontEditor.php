@@ -110,6 +110,7 @@ class FrontEditor extends Control implements ITemplatePath
      */
     private function setTemplate(ITemplate $template)
     {
+        $data = $this->getData();   // load data
         // add user defined variable
         foreach ($this->variableTemplate as $name => $value) {
             $template->$name = $value;
@@ -117,7 +118,7 @@ class FrontEditor extends Control implements ITemplatePath
 
         $template->acl = $this->acl;
         $template->editor = $this->editor;
-        $template->data = $this->getData(); // load data
+        $template->data = $data;
         $template->identification = $this->identification;;
     }
 
