@@ -59,11 +59,15 @@ trait FrontEditorControl
 
     /**
      * Handle front editor disable.
+     *
+     * @param bool $redirect
      */
-    public function handleFrontEditorDisable()
+    public function handleFrontEditorDisable(bool $redirect = true)
     {
         $this->_section->remove();
-        $this->redirect('this');
+        if ($redirect) {
+            $this->redirect('this');
+        }
     }
 
 
