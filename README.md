@@ -144,6 +144,7 @@ protected function startup()
 protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEditor
 {
     $frontEditor->setTemplatePath(__DIR__ . '/templates/frontEditor.latte');
+    $frontEditor->setTemplatePathLink(__DIR__ . '/templates/frontEditorLink.latte');
     $frontEditor->setAcl($this->isFrontEditorEnable());
 
     $frontEditor->onLoadData = function ($identification) use ($frontEditor) {
@@ -158,8 +159,8 @@ protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEd
 
     $frontEditor->onSuccess[] = function (Form $form, array $values) {
         try {
-            if ($this['config']->editData($values['id'], ['content' => $values['content']])) {
-                $this->flashMessage('done', 'success');
+            if ($this['config']->editData((int) $values['id'], ['content' => $values['content']])) {
+                $this->flashMessage($this->translator->translate('front-editor-onsuccess'), 'success');
             }
         } catch (\Dibi\Exception $e) {
             $this->flashMessage($e->getMessage(), 'danger');
