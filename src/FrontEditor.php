@@ -30,7 +30,7 @@ class FrontEditor extends Control implements ITemplatePath
     /** @var bool */
     private $editor = false;
     /** @var array */
-    private $data;
+    private $data = [];
     /** @var callable */
     public $onSuccess, $onLoadData;
     /** @var array */
@@ -135,7 +135,7 @@ class FrontEditor extends Control implements ITemplatePath
         if ($this->onLoadData) {
             $result = Callback::invokeSafe($this->onLoadData, [$this->identification], null);
         }
-        return $result;
+        return $result ?? [];
     }
 
 

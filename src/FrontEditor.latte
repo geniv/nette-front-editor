@@ -1,14 +1,20 @@
 {snippet content}
     {if $editor && $acl}
-        <a n:href="SwitchEditor! false" class="ajax">{_'front-editor-back'}</a>
+        <a n:href="SwitchEditor! false" class="ajax">{_'front-editor-close'}</a>
         {form form, class=>"ajax"}
-            {label content /}
-            {input content, class=>"form-control"}
-
-            {input send, class=>"btn btn-primary"}
+            <div n:if="$type=='text'" class="form-group form-group-text">
+                {label content/}
+                {input content, class=>"form-element"}
+            </div>
+            <div n:if="$type=='textarea'" class="form-group form-group-textarea">
+                {label content/}
+                {input content, rows=>4, class=>"form-element"}
+            </div>
+            <div n:if="$type=='editor'" class="form-group form-group-editor">
+                {label content/}
+                {input content, rows=>4}
+            </div>
+            {input send, class=>"btn btn-edit"}
         {/form}
-    {else}
-        <a n:href="SwitchEditor! true" n:if="$acl" class="ajax">{_'front-editor-edit-link'}</a>
-        {$data|noescape}
     {/if}
 {/snippet}

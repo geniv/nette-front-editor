@@ -1,5 +1,6 @@
 front-editor-content: "Obsah"
 front-editor-send: "Uložit"
 front-editor-edit-link: "Editovat"
-front-editor-back: "Zpět"
 front-editor-onsuccess: "Uloženo"
+front-editor-close: "Zavřít"
+front-editor-link: "Upravit"
