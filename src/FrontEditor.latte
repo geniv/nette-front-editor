@@ -1,7 +1,7 @@
 <div class="front-editor" n:snippet="content" n:if="$acl">
     {if $editor}
         <p>Přímá editace stránek</p>
-        <a href="{$adminLink}">{_'front-editor-back'}</a>
+        <a href="admin/{$adminLink}">{_'front-editor-back'}</a>
         <a n:href="FrontEditorDisable!" class="front-editor-logout ajax">{_'front-editor-logout'}</a>
         <a n:href="SwitchEditor! false" class="ajax">{_'front-editor-close'}</a>
         {form form, class=>"ajax"}
