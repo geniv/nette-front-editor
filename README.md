@@ -60,7 +60,7 @@ protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEd
     $frontEditor->onSuccess[] = function (Form $form, array $values) {
         try {
             if ($this['config']->setEditor(static::IDENTIFIER, $values['content'])) {
-                $this->flashMessage($this->translator->translate('front-editor-onsuccess'), 'success');
+                $this->flashMessage($this->translator->translate('front-editor#onsuccess'), 'success');
             }
         } catch (\Dibi\Exception $e) {
             $this->flashMessage($e->getMessage(), 'danger');
@@ -165,7 +165,7 @@ protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEd
     $frontEditor->onSuccess[] = function (Form $form, array $values) {
         try {
             if ($this['config']->editData((int) $values['id'], ['content' => $values['content']])) {
-                $this->flashMessage($this->translator->translate('front-editor-onsuccess'), 'success');
+                $this->flashMessage($this->translator->translate('front-editor#onsuccess'), 'success');
             }
         } catch (\Dibi\Exception $e) {
             $this->flashMessage($e->getMessage(), 'danger');
@@ -178,9 +178,8 @@ protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEd
 
 usage front:
 ```latte
-<a n:href="FrontEditorDisable!" n:if="$frontEditorEnable" class="ajax">logout edit mode</a>
-
-{control frontEditor:link 'identText1'} {control config:editor 'identText1'}
+{control frontEditor:link 'identText1'} 
+{control config:editor 'identText1'}
 
 {control frontEditor}
 ```
