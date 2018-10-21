@@ -2,7 +2,7 @@
     {if $editor}
         <p>Přímá editace stránek</p>
         <a href="admin/{$adminLink}">{_'front-editor-back'}</a>
-        <a n:href="FrontEditorDisable!" class="front-editor-logout ajax">{_'front-editor-logout'}</a>
+        <a n:href="LogoutEditor!" class="front-editor-logout ajax">{_'front-editor-logout'}</a>
         <a n:href="SwitchEditor! false" class="ajax">{_'front-editor-close'}</a>
         {form form, class=>"ajax"}
             <div n:if="$type=='text'" class="form-group form-group-text">

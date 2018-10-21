@@ -158,6 +158,10 @@ protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEd
         return null;
     };
 
+     $frontEditor->onLogout[] = function () {
+        $this->handleFrontEditorDisable();
+    };
+
     $frontEditor->onSuccess[] = function (Form $form, array $values) {
         try {
             if ($this['config']->editData((int) $values['id'], ['content' => $values['content']])) {

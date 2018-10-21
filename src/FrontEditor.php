@@ -32,7 +32,7 @@ class FrontEditor extends Control implements ITemplatePath
     /** @var array */
     private $data = [];
     /** @var callable */
-    public $onSuccess, $onLoadData;
+    public $onSuccess, $onLoadData, $onLogout;
     /** @var array */
     private $variableTemplate = [];
     /** @var string */
@@ -221,6 +221,16 @@ class FrontEditor extends Control implements ITemplatePath
         if ($this->presenter->isAjax()) {
             $this->redrawControl('content');
         }
+    }
+
+
+    /**
+     * Handle logout editor.
+     */
+    public function handleLogoutEditor()
+    {
+        // call logout callback
+        $this->onLogout();
     }
 
 
