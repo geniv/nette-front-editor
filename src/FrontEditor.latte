@@ -1,7 +1,7 @@
 {if $editor && $acl}
     <div class="front-editor" n:snippet="content">
         <p>Přímá editace stránek</p>
-        <a href="admin/{$presenter->context->parameters['routerPrefix']['adminBaseUrl']}">{_'front-editor-back'}</a>
+        <a href="{$adminLink}">{_'front-editor-back'}</a>
         <a n:href="FrontEditorDisable!" class="front-editor-logout ajax">{_'front-editor-logout'}</a>
         <a n:href="SwitchEditor! false" class="ajax">{_'front-editor-close'}</a>
         {form form, class=>"ajax"}

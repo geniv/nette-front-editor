@@ -29,6 +29,7 @@ neon configure:
 frontEditor:
 #   autowired: true
 #   formContainer: FrontEditor\FormContainer
+#   adminLink: "admin/%routerPrefix.adminBaseUrl%"
 ```
 
 neon configure extension:

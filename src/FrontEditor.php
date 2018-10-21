@@ -35,6 +35,8 @@ class FrontEditor extends Control implements ITemplatePath
     public $onSuccess, $onLoadData;
     /** @var array */
     private $variableTemplate = [];
+    /** @var string */
+    private $adminLink = null;
     /** @var string @persistent */
     public $identification = null;
 
@@ -91,6 +93,17 @@ class FrontEditor extends Control implements ITemplatePath
 
 
     /**
+     * Set admin link.
+     *
+     * @param string|null $adminLink
+     */
+    public function setAdminLink(string $adminLink = null)
+    {
+        $this->adminLink = $adminLink;
+    }
+
+
+    /**
      * Add variable template.
      *
      * @param string $name
@@ -120,6 +133,7 @@ class FrontEditor extends Control implements ITemplatePath
         $template->editor = $this->editor;
         $template->data = $data;
         $template->identification = $this->identification;
+        $template->adminLink = $this->adminLink;
     }
 
 
