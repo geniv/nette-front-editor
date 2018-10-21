@@ -1,5 +1,5 @@
-{if $editor && $acl}
-    <div class="front-editor" n:snippet="content">
+<div class="front-editor" n:snippet="content" n:if="$acl">
+    {if $editor}
         <p>Přímá editace stránek</p>
         <a href="{$adminLink}">{_'front-editor-back'}</a>
         <a n:href="FrontEditorDisable!" class="front-editor-logout ajax">{_'front-editor-logout'}</a>
@@ -19,5 +19,5 @@
             </div>
             {input send, class=>"btn btn-edit"}
         {/form}
-    </div>
-{/if}
+    {/if}
+</div>
