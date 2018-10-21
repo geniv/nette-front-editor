@@ -1,0 +1,14 @@
+{snippet content}
+    {if $editor && $acl}
+        <a n:href="SwitchEditor! false" class="ajax">{_'front-editor#close'}</a>
+        {form form, class=>"ajax"}
+            {label content /}
+            {input content, class=>"form-control"}
+
+            {input send, class=>"btn btn-primary"}
+        {/form}
+    {else}
+        <a n:href="SwitchEditor! true" n:if="$acl" class="ajax">{_'front-editor#edit-link'}</a>
+        {$data|noescape}
+    {/if}
+{/snippet}

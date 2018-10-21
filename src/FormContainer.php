@@ -41,17 +41,17 @@ class FormContainer implements IFormContainer
     {
         switch ($this->type) {
             case 'text':
-                $form->addText('content', 'front-editor-content');
+                $form->addText('content', 'front-editor#content');
                 break;
 
             case 'textarea':
-                $form->addTextArea('content', 'front-editor-content');
+                $form->addTextArea('content', 'front-editor#content');
                 break;
 
             case 'editor':
-                $form->addTextArea('content', 'front-editor-content');
+                $form->addTextArea('content', 'front-editor#content');
                 break;
         }
-        $form->addSubmit('send', 'front-editor-send');
+        $form->addSubmit('send', 'front-editor#send');
     }
 }

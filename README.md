@@ -29,6 +29,7 @@ neon configure:
 frontEditor:
 #   autowired: true
 #   formContainer: FrontEditor\FormContainer
+#   adminLink: "admin/%routerPrefix.adminBaseUrl%"
 ```
 
 neon configure extension:
@@ -59,7 +60,7 @@ protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEd
     $frontEditor->onSuccess[] = function (Form $form, array $values) {
         try {
             if ($this['config']->setEditor(static::IDENTIFIER, $values['content'])) {
-                $this->flashMessage($this->translator->translate('front-editor-onsuccess'), 'success');
+                $this->flashMessage($this->translator->translate('front-editor#onsuccess'), 'success');
             }
         } catch (\Dibi\Exception $e) {
             $this->flashMessage($e->getMessage(), 'danger');
@@ -144,6 +145,7 @@ protected function startup()
 protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEditor
 {
     $frontEditor->setTemplatePath(__DIR__ . '/templates/frontEditor.latte');
+    $frontEditor->setTemplatePathLink(__DIR__ . '/templates/frontEditorLink.latte');
     $frontEditor->setAcl($this->isFrontEditorEnable());
 
     $frontEditor->onLoadData = function ($identification) use ($frontEditor) {
@@ -156,10 +158,14 @@ protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEd
         return null;
     };
 
+     $frontEditor->onLogout[] = function () {
+        $this->handleFrontEditorDisable();
+    };
+
     $frontEditor->onSuccess[] = function (Form $form, array $values) {
         try {
-            if ($this['config']->editData($values['id'], ['content' => $values['content']])) {
-                $this->flashMessage('done', 'success');
+            if ($this['config']->editData((int) $values['id'], ['content' => $values['content']])) {
+                $this->flashMessage($this->translator->translate('front-editor#onsuccess'), 'success');
             }
         } catch (\Dibi\Exception $e) {
             $this->flashMessage($e->getMessage(), 'danger');
@@ -172,9 +178,8 @@ protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEd
 
 usage front:
 ```latte
-<a n:href="FrontEditorDisable!" n:if="$frontEditorEnable" class="ajax">logout edit mode</a>
-
-{control frontEditor:link 'identText1'} {control config:editor 'identText1'}
+{control frontEditor:link 'identText1'} 
+{control config:editor 'identText1'}
 
 {control frontEditor}
 ```

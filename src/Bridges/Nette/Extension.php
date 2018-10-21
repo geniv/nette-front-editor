@@ -20,6 +20,7 @@ class Extension extends CompilerExtension
     private $defaults = [
         'autowired'     => true,
         'formContainer' => FormContainer::class,
+        'adminLink'     => null,
     ];
 
 
@@ -34,8 +35,12 @@ class Extension extends CompilerExtension
         $formContainer = GeneralForm::getDefinitionFormContainer($this);
 
         // define form
-        $builder->addDefinition($this->prefix('form'))
+        $form = $builder->addDefinition($this->prefix('form'))
             ->setFactory(FrontEditor::class, [$formContainer])
             ->setAutowired($config['autowired']);
+
+        if (isset($config['adminLink']) && $config['adminLink']) {
+            $form->setAdminLink($config['adminLink']);
+        }
     }
 }

@@ -30,11 +30,13 @@ class FrontEditor extends Control implements ITemplatePath
     /** @var bool */
     private $editor = false;
     /** @var array */
-    private $data;
+    private $data = [];
     /** @var callable */
-    public $onSuccess, $onLoadData;
+    public $onSuccess, $onLoadData, $onLogout;
     /** @var array */
     private $variableTemplate = [];
+    /** @var string */
+    private $adminLink = null;
     /** @var string @persistent */
     public $identification = null;
 
@@ -91,6 +93,17 @@ class FrontEditor extends Control implements ITemplatePath
 
 
     /**
+     * Set admin link.
+     *
+     * @param string|null $adminLink
+     */
+    public function setAdminLink(string $adminLink = null)
+    {
+        $this->adminLink = $adminLink;
+    }
+
+
+    /**
      * Add variable template.
      *
      * @param string $name
@@ -120,6 +133,7 @@ class FrontEditor extends Control implements ITemplatePath
         $template->editor = $this->editor;
         $template->data = $data;
         $template->identification = $this->identification;
+        $template->adminLink = $this->adminLink;
     }
 
 
@@ -135,7 +149,7 @@ class FrontEditor extends Control implements ITemplatePath
         if ($this->onLoadData) {
             $result = Callback::invokeSafe($this->onLoadData, [$this->identification], null);
         }
-        return $result;
+        return $result ?? [];
     }
 
 
@@ -207,6 +221,16 @@ class FrontEditor extends Control implements ITemplatePath
         if ($this->presenter->isAjax()) {
             $this->redrawControl('content');
         }
+    }
+
+
+    /**
+     * Handle logout editor.
+     */
+    public function handleLogoutEditor()
+    {
+        // call logout callback
+        $this->onLogout();
     }
 
 
