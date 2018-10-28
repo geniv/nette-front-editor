@@ -147,7 +147,7 @@ class FrontEditor extends Control implements ITemplatePath
     {
         $result = $this->data;
         if ($this->onLoadData) {
-            $result = Callback::invokeSafe($this->onLoadData, [$this->identification], null);
+            $result = (array) Callback::invokeSafe($this->onLoadData, [$this->identification], null);
         }
         return $result ?? [];
     }
