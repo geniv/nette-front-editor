@@ -3,7 +3,6 @@
 namespace FrontEditor;
 
 use GeneralForm\IFormContainer;
-use GeneralForm\ITemplatePath;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\ITemplate;
@@ -17,7 +16,7 @@ use Nette\Utils\Callback;
  * @author  geniv
  * @package FrontEditor
  */
-class FrontEditor extends Control implements ITemplatePath
+class FrontEditor extends Control implements IFrontEditor
 {
     /** @var IFormContainer */
     private $formContainer;

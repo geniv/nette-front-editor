@@ -142,7 +142,7 @@ protected function startup()
     $this->template->frontEditorEnable = $this->isFrontEditorEnable();
 }
 
-protected function createComponentFrontEditor(FrontEditor $frontEditor): FrontEditor
+protected function createComponentFrontEditor(IFrontEditor $frontEditor): IFrontEditor
 {
     $frontEditor->setTemplatePath(__DIR__ . '/templates/frontEditor.latte');
     $frontEditor->setTemplatePathLink(__DIR__ . '/templates/frontEditorLink.latte');
