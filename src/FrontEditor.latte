@@ -1,11 +1,108 @@
 <div class="front-editor" n:snippet="content" n:if="$acl">
     {if $editor}
-        <p>{_'front-editor#title'}</p>
-        <a href="admin/{$adminLink}">{_'front-editor#back'}</a>
-        <a n:href="LogoutEditor!" class="front-editor-logout ajax">{_'front-editor#logout'}</a>
-        <a n:href="SwitchEditor! false" class="ajax">{_'front-editor#close'}</a>
+        <script n:if="$type=='editor' || $type=='editormedia'">
+            function initFrontEditorCkEditor() {
+                if ($(".front-editor .form-group-editor")[0]) {
+                    CKEDITOR.on("instanceReady", function(instance) {
+                        $.each(CKEDITOR.instances, function(instance) {
+                            CKEDITOR.instances[instance].on("change", function(e) {
+                                for (instance in CKEDITOR.instances) {
+                                    CKEDITOR.instances[instance].updateElement();
+                                }
+                            });
+                        });
+                    });
+                    $(".front-editor .form-group-editor textarea").each(function(index, el) {
+                        CKEDITOR.replace(this.id, {
+                            language: nwLang,
+                            baseHref: $("base").attr("href"),
+                            extraPlugins: 'autogrow,templates,justify,find,div,newpage,selectall,showblocks,tableresize,font,preview,autolink,print,dialogadvtab,save',
+                            allowedContent: true, // musi byt, jinak nebere inline styly ze sablon
+                            entities_latin: false,
+                            autoGrow_onStartup: true,
+                            autoGrow_bottomSpace: 0,
+                            autoGrow_maxHeight: 150,
+                            baseFloatZIndex: 41000,
+                            // startupOutlineBlocks: true,
+                            templates_files: ['admin/www/ckeditor/templates.js'],
+                            templates: 'nwa',
+                            fontSize_sizes: 'xx-small;x-small;small;medium;large;x-large;xx-large;8/0.5rem;9/0.5625rem;10/0.625rem;11/0.6875rem;12/0.75rem;13/0.8125rem;14/0.875rem;15/0.9375rem;16/1rem;17/1.0625rem;18/1.125rem;19/1.1875rem;20/1.25rem;21/1.3125rem;22/1.375rem;23/1.4375rem;24/1.5rem;25/1.5625rem;26/1.625rem;27/1.6875rem;28/1.75rem;29/1.8125rem;30/1.875rem;31/1.9375rem;32/2rem;33/2.0625rem;34/2.125rem;35/2.1875rem;36/2.25rem;37/2.3125rem;38/2.375rem;39/2.4375rem;40/2.5rem;41/2.5625rem;42/2.625rem;43/2.6875rem;44/2.75rem;45/2.8125rem;46/2.875rem;47/2.9375rem;48/3rem;49/3.0625rem;50/3.125rem;51/3.1875rem;52/3.25rem;53/3.3125rem;54/3.375rem;55/3.4375rem;56/3.5rem;57/3.5625rem;58/3.625rem;59/3.6875rem;60/3.75rem;61/3.8125rem;62/3.875rem;63/3.9375rem;64/4rem;65/4.0625rem;66/4.125rem;67/4.1875rem;68/4.25rem;69/4.3125rem;70/4.375rem',
+                            pasteFilter: 'h1 h2 h3 h4 h5 h6 p ul ol li b strong i em s q u blockquote br hr dl dt dd code pre sub sup small table thead tbody tfoot tr th td; img[!src, alt]; a[!href, title]', // https://docs.ckeditor.com/ckeditor4/docs/#!/api/CKEDITOR.config-cfg-pasteFilter
+                            toolbar: [
+                                {
+                                    name: 'documentbase',
+                                    items: ['NewPage', '-', 'Preview', 'Print', '-'/*, 'Save'*/]
+                                },
+                                {
+                                    name: 'templates',
+                                    items: ['Templates']
+                                },
+                                {
+                                    name: 'clipboard',
+                                    items: ['Cut', 'Copy', 'Paste',/* 'PasteText', 'PasteFromWord',*/ '-', 'Undo', 'Redo']
+                                },
+                                {
+                                    name: 'textselect',
+                                    items: ['SelectAll']
+                                },
+                                {
+                                    name: 'editing',
+                                    items: ['Find', 'Replace']
+                                },
+                                // {
+                                //     name: 'textvalidator',
+                                //     items: ['Scayt']
+                                // },
+                                {
+                                    name: 'links',
+                                    items: ['Link', 'Unlink', 'Anchor']
+                                },
+                                {
+                                    name: 'insert',
+                                    items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar', 'PageBreak'/*, 'Iframe'*/]
+                                },
+                                {
+                                    name: 'tools1',
+                                    items: ['Maximize']
+                                },
+                                {
+                                    name: 'tools2',
+                                    items: ['ShowBlocks', '-', 'Source']
+                                },
+                                '/',
+                                {
+                                    name: 'basicstyles',
+                                    items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+                                },
+                                {
+                                    name: 'paragraph',
+                                    items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']
+                                },
+                                {
+                                    name: 'styles',
+                                    items: [/*'Styles', */'Format', /*'Font',*/ 'FontSize']
+                                },
+                                {
+                                    name: 'colors',
+                                    items: ['TextColor', 'BGColor']
+                                }
+                            ]
+                        });
+                    });
+                }
+            }
+            initFrontEditorCkEditor();
+        </script>
+        <script n:if="$type=='textarea'">
+            function initFrontEditorTextarea() {
+                if ($(".front-editor .form-group-textarea")[0]) {
+                    autosize($(".front-editor .form-group-textarea textarea"));
+                }
+            }
+            initFrontEditorTextarea();
+        </script>
         {form form, class=>"ajax"}
-            <div n:if="$type=='text'" class="form-group form-group-text">
+            <div n:if="$type=='text' || $type=='translation'" class="form-group form-group-text">
                 {label content/}
                 {input content, class=>"form-element"}
             </div>
@@ -13,11 +110,16 @@
                 {label content/}
                 {input content, rows=>4, class=>"form-element"}
             </div>
-            <div n:if="$type=='editor'" class="form-group form-group-editor">
+            <div n:if="$type=='editor' || $type=='editormedia'" class="form-group form-group-editor">
                 {label content/}
                 {input content, rows=>4}
             </div>
-            {input send, class=>"btn btn-edit"}
+            <div class="front-editor-btn-wrap">
+                {input send, class=>"front-editor-btn front-editor-btn-save"}
+                <a n:href="SwitchEditor! false" class="front-editor-btn front-editor-btn-close ajax">{_'front-editor#close'}</a>
+                <a href="admin/{$adminLink}" class="front-editor-btn front-editor-btn-backlink">{_'front-editor#back'}</a>
+                <a n:href="LogoutEditor!" class="front-editor-btn front-editor-btn-logout ajax">{_'front-editor#logout'}</a>
+            </div>
         {/form}
     {/if}
 </div>
