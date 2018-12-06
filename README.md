@@ -165,7 +165,10 @@ protected function createComponentFrontEditor(IFrontEditor $frontEditor): IFront
     $frontEditor->onSuccess[] = function (Form $form, array $values) {
         try {
             if ($this['config']->editData((int) $values['id'], ['content' => $values['content']])) {
+                $this['config']->cleanCache();
                 $this->flashMessage($this->translator->translate('front-editor#onsuccess'), 'success');
+            } else {
+                $this->flashMessage($this->translator->translate('front-editor#onsuccess-fail'), 'danger');
             }
         } catch (\Dibi\Exception $e) {
             $this->flashMessage($e->getMessage(), 'danger');
