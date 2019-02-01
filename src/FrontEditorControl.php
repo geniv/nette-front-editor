@@ -90,7 +90,10 @@ trait FrontEditorControl
      */
     public function getFrontEditorEnableLink(string $sessionExpire = '+1 hour'): string
     {
-        $hash = $this->_identityModel->getEncodeHash($this->user->getId(), $this->user->getIdentity()->login, $sessionExpire);
-        return '?hash=' . $hash . '&do=FrontEditorEnable';
+        if ($this->user->isLoggedIn()) {
+            $hash = $this->_identityModel->getEncodeHash($this->user->getId(), $this->user->getIdentity()->login, $sessionExpire);
+            return '?hash=' . $hash . '&do=FrontEditorEnable';
+        }
+        return '';
     }
 }
